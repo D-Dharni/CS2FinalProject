@@ -2,11 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 
-public class GameViewer extends JFrame implements MouseListener, MouseMotionListener {
+public class GameViewer extends JFrame implements MouseListener{
     private Game game;
+    private final int WINDOW_WIDTH = 1000;
+    private final int WINDOW_LENGTH = 800;
 
     public GameViewer(Game game) {
         // Initialize Game
@@ -14,13 +15,12 @@ public class GameViewer extends JFrame implements MouseListener, MouseMotionList
 
         // Set up Window
         setTitle("Memory Match Game");
-        setSize(1000, 800);
+        setSize(WINDOW_WIDTH, WINDOW_LENGTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
         // MouseListener stuff
         this.addMouseListener(this);
-        this.addMouseMotionListener(this);
     }
 
     public Game getGame() {
@@ -28,8 +28,26 @@ public class GameViewer extends JFrame implements MouseListener, MouseMotionList
     }
 
     public void paint(Graphics g) {
-        for (Card c: game.getCards()) {
-            c.draw(g);
+        // Clear the window.
+        g.setColor(Color.black);
+        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_LENGTH);
+
+        if (game.getState().equals("game")) {
+            for (Card c: game.getCards()) {
+                c.draw(g);
+            }
+
+            g.setColor(Color.white);
+            g.setFont(new Font("Arial", Font.BOLD, 24));
+            g.drawString("Moves: " + game.getMoves(), 100, 100);
+        }
+        else {
+            // Draw Game Over
+            g.setFont(new Font("Arial", Font.BOLD, 36));
+            g.drawImage(new ImageIcon("Resources/GameOver.png").getImage(), 0, 0, WINDOW_WIDTH, WINDOW_LENGTH, this);
+
+            g.setColor(Color.white);
+            g.drawString("Final Number of Moves: " + game.getMoves(), 225, 100);
         }
     }
 
@@ -68,16 +86,6 @@ public class GameViewer extends JFrame implements MouseListener, MouseMotionList
 
     @Override
     public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
 
     }
 }

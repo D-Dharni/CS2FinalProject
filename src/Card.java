@@ -8,6 +8,7 @@ public class Card {
     private int width;
     private int height;
     private boolean faceUp;
+    private boolean matched;
     private Image image;
     private Image faceDownImage;
     private GameViewer window;
@@ -22,7 +23,20 @@ public class Card {
         this.image = image;
         this.window = window;
         this.faceUp = false;
+        this.matched = false;
         this.faceDownImage = new ImageIcon("Resources/down.png").getImage();
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public boolean isMatched() {
+        return matched;
+    }
+
+    public void setMatched(boolean matched) {
+        this.matched = matched;
     }
 
     public boolean hasCoordinates(int mouseX, int mouseY) {
@@ -38,15 +52,15 @@ public class Card {
     }
 
     public void draw (Graphics g) {
+        if (matched) {
+            return;
+        }
         // If it is face down then just draw the grey rectangle
         if (!faceUp) {
-            System.out.println("drawing ts");
-//            g.setColor(Color.GRAY);
-//            g.drawRect(x, y, width, height);
             g.drawImage(faceDownImage, x, y, width, height, window);
         }
         // If it isn't draw the specified image
-        else {
+        else if(faceUp) {
             g.drawImage(image, x, y, width, height, window);
         }
     }

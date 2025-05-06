@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class Game {
     private GameViewer window;
+    private String state;
+    private int moves;
     private ArrayList<Card> cards;
     private ArrayList<Card> faceUpCards;
 
@@ -15,18 +17,24 @@ public class Game {
         // Initialize cards
         this.cards = new ArrayList<>();
 
-        // Initialize window
-        this.window = new GameViewer(this);
+        // Initialize state
+        this.state = "game";
 
         // Initialize faceUpCards
         this.faceUpCards = new ArrayList<Card>();
+
+        // Initialize window
+        this.window = new GameViewer(this);
+
+        // Initialize moves
+        this.moves = 0;
 
         // Variables for putting images in cards
 
         int cardWidth = 100;
         int cardHeight = 150;
         int space = 20;
-        int startX = 100;
+        int startX = 250;
         int startY = 100;
 
         // Put images in cards
@@ -48,6 +56,11 @@ public class Game {
     }
 
     public void cardClick(Card c) {
+        // If already face up or matched ignore it
+        if (c.isMatched() || c.getFaceUp()) {
+            return;
+        }
+
         if (faceUpCards.size() == 2) {
             // Flip the first one back down and remove it
             Card flip = faceUpCards.remove(0);
@@ -57,6 +70,34 @@ public class Game {
         // Flip the clicked card and add it
         c.flip();
         faceUpCards.add(c);
+
+        // Increment moves
+        moves++;
+
+        if (faceUpCards.size() == 2) {
+            // Get both cards and save them
+            Card c1 = faceUpCards.get(0);
+            Card c2 = faceUpCards.get(1);
+
+            // If the images are equal
+            if (c1 != c2 && c1.getImage().equals(c2.getImage())) {
+                // Set matched to true and remove everything in faceUpCards
+                c1.setMatched(true);
+                c2.setMatched(true);
+                cards.remove(c1);
+                cards.remove(c2);
+                faceUpCards.clear();
+
+                // check for potential win
+                if (checkWin()) {
+                    System.out.println("yep");
+                    state = "over";
+                }
+
+                window.repaint();
+                return;
+            }
+        }
 
         // Repaint
         window.repaint();
@@ -86,6 +127,19 @@ public class Game {
         }
     }
 
+    private boolean checkWin() {
+        // Check each card
+        for (Card c: cards) {
+            // If the card isn't matched
+            if (!c.isMatched()) {
+                // keep going
+                return false;
+            }
+        }
+        // game is over
+        return true;
+    }
+
     public static void main (String[] args){
         Game game = new Game();
         game.getWindow().repaint();
@@ -95,7 +149,15 @@ public class Game {
         return cards;
     }
 
+    public String getState() {
+        return state;
+    }
+
     public GameViewer getWindow() {
         return window;
+    }
+
+    public int getMoves() {
+        return moves;
     }
 }
