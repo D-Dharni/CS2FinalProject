@@ -1,10 +1,14 @@
+// Deven Dharni
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 
-public class GameViewer extends JFrame implements MouseListener{
+public class GameViewer extends JFrame implements MouseListener, KeyListener {
     private Game game;
     private final int WINDOW_WIDTH = 1000;
     private final int WINDOW_LENGTH = 800;
@@ -19,8 +23,10 @@ public class GameViewer extends JFrame implements MouseListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
-        // MouseListener stuff
+        // MouseListener and Keylistener stuff
         this.addMouseListener(this);
+        this.addKeyListener(this);
+
     }
 
     public Game getGame() {
@@ -48,6 +54,8 @@ public class GameViewer extends JFrame implements MouseListener{
 
             g.setColor(Color.white);
             g.drawString("Final Number of Moves: " + game.getMoves(), 225, 100);
+
+            g.drawString("Press SPACE to Play Again", 225, 150);
         }
     }
 
@@ -67,7 +75,7 @@ public class GameViewer extends JFrame implements MouseListener{
         }
     }
 
-    // Functions necessary for MouseListener and MouseMotionListener
+    // Functions necessary for MouseListener and Key Listener
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -86,6 +94,23 @@ public class GameViewer extends JFrame implements MouseListener{
 
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (game.getState().equals("over") && e.getKeyCode() == KeyEvent.VK_SPACE) {
+            game.reset();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }

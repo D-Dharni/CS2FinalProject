@@ -1,3 +1,5 @@
+// Deven Dharni
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -29,6 +31,10 @@ public class Game {
         // Initialize moves
         this.moves = 0;
 
+        loadImagesToCard(images);
+    }
+
+    public void loadImagesToCard (ArrayList<Image> images) {
         // Variables for putting images in cards
 
         int cardWidth = 100;
@@ -104,13 +110,16 @@ public class Game {
     }
 
     private ArrayList<Image> loadCardImages() {
+        // Array list of Images
         ArrayList<Image> images = new ArrayList<Image>();
         for (int i = 0; i < 8; i++) {
+            // Loop through each image and add it twice
             String fileName = "Resources/";
             Image img = new ImageIcon(fileName + i + ".png").getImage();
             images.add(img);
             images.add(img);
         }
+        // Return the images
         return images;
     }
 
@@ -136,8 +145,28 @@ public class Game {
                 return false;
             }
         }
-        // game is over
+        // Game is over
         return true;
+    }
+
+    public void reset() {
+        // Reset moves and game state
+        this.moves = 0;
+        this.state = "game";
+
+        // Clear previous cards
+        this.cards.clear();
+        this.faceUpCards.clear();
+
+        // Create new image list
+        ArrayList<Image> images = loadCardImages();
+        shuffle(images);
+
+        // Load card images
+        loadImagesToCard(images);
+
+        // Repaint window
+        window.repaint();
     }
 
     public static void main (String[] args){
